@@ -1,0 +1,14 @@
+---
+import { db, Page } from "astro:db";
+import DashboardLayout from "@layouts/DashboardLayout.astro";
+import AddPageForm from "@pages/dashboard/pages/_components/AddPageForm.vue";
+import PageTable from "@pages/dashboard/pages/_components/PageTable.vue";
+
+const pages = await db.select().from(Page);
+---
+
+<DashboardLayout title="Pages - Dashboard">
+    <h1>Pages</h1>
+    <AddPageForm client:load />
+    <PageTable pages={pages} client:load />
+</DashboardLayout>
