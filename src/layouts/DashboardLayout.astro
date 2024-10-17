@@ -1,0 +1,61 @@
+---
+import Navigation from "@components/Navigation.astro";
+
+interface Props {
+    title: string;
+}
+
+const { title } = Astro.props;
+
+const siteNavLinks = [
+    {
+        url: "/",
+        text: "Branch Duck",
+    },
+    {
+        url: "/dashboard",
+        text: "Dashboard",
+    },
+];
+
+const dashboardNavLinks = [
+    {
+        url: "/dashboard/pages",
+        text: "Pages",
+    },
+    {
+        url: "/dashboard/flows",
+        text: "Flows",
+    },
+    {
+        url: "/dashboard/conditions",
+        text: "Conditions",
+    },
+    {
+        url: "/dashboard/headings",
+        text: "Headings",
+    },
+    {
+        url: "/dashboard/links",
+        text: "Links",
+    },
+    {
+        url: "/dashboard/buttons",
+        text: "Buttons",
+    },
+];
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title} - Branch Duck</title>
+    </head>
+    <body>
+        <Navigation name="Site" links={siteNavLinks} />
+        <Navigation name="Dashboard" links={dashboardNavLinks} />
+        <slot />
+    </body>
+</html>

@@ -1,0 +1,27 @@
+---
+import Link from "@components/Link.astro";
+
+type Link = {
+    url: string;
+    text: string;
+};
+
+interface Props {
+    name?: string;
+    links: Link[];
+}
+
+const { name, links } = Astro.props;
+---
+
+<nav aria-label={name}>
+    <ul>
+        {
+            links.map((link) => (
+                <li>
+                    <Link url={link.url}>{link.text}</Link>
+                </li>
+            ))
+        }
+    </ul>
+</nav>

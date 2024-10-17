@@ -1,0 +1,19 @@
+---
+interface Props {
+    url: string;
+}
+
+const { url } = Astro.props;
+const request = Astro.request;
+const currentPathname = new URL(request.url).pathname;
+
+function getAriaCurrent(pathname: string): "page" | undefined {
+    if (pathname === currentPathname) {
+        return "page";
+    }
+
+    return undefined;
+}
+---
+
+<a href={url} aria-current={getAriaCurrent(url)}><slot /></a>
