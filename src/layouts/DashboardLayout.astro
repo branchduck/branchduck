@@ -1,5 +1,9 @@
 ---
 import Navigation from "@components/Navigation.astro";
+import { getSession } from "auth-astro/server";
+import { SignIn, SignOut } from "auth-astro/components";
+
+const session = await getSession(Astro.request);
 
 interface Props {
     title: string;
@@ -54,6 +58,13 @@ const dashboardNavLinks = [
         <title>{title} - Branch Duck</title>
     </head>
     <body>
+        {
+            session ? (
+                <SignOut>Logout</SignOut>
+            ) : (
+                <SignIn provider="github">Login with GitHub</SignIn>
+            )
+        }
         <Navigation name="Site" links={siteNavLinks} />
         <Navigation name="Dashboard" links={dashboardNavLinks} />
         <slot />
