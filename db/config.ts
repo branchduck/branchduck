@@ -3,15 +3,18 @@ import { column, defineDb, defineTable } from "astro:db";
 const User = defineTable({
     columns: {
         id: column.number({ primaryKey: true }),
-        name: column.text(),
-        email: column.text(),
+        github_id: column.number({ unique: true }),
+        email: column.text({ unique: true }),
+        username: column.text(),
     },
+    indexes: [{ on: "github_id", unique: true }],
 });
 
-const Environment = defineTable({
+const Session = defineTable({
     columns: {
-        id: column.number({ primaryKey: true }),
-        userId: column.number({ references: () => User.columns.id }),
+        id: column.text({ primaryKey: true }),
+        user_id: column.number({ references: () => User.columns.id }),
+        expires_at: column.number(),
     },
 });
 
@@ -26,5 +29,7 @@ const Page = defineTable({
 export default defineDb({
     tables: {
         Page,
+        User,
+        Session,
     },
 });
