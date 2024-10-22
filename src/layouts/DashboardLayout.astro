@@ -55,7 +55,24 @@ const dashboardNavLinks = [
     </head>
     <body>
         <Navigation name="Site" links={siteNavLinks} />
+        <form id="form-sign-out">
+            <button>Sign Out</button>
+        </form>
         <Navigation name="Dashboard" links={dashboardNavLinks} />
         <slot />
     </body>
 </html>
+
+<script>
+    const signOutForm = document.getElementById(
+        "form-sign-out",
+    ) as HTMLFormElement;
+
+    signOutForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        await fetch("/api/sign-out", {
+            method: "POST",
+        });
+        window.location.href = "/sign-in";
+    });
+</script>
