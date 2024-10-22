@@ -3,10 +3,9 @@ import { defineConfig, envField } from "astro/config";
 import db from "@astrojs/db";
 import node from "@astrojs/node";
 import vue from "@astrojs/vue";
-import auth from "auth-astro";
 
 export default defineConfig({
-    integrations: [db(), vue({ appEntrypoint: "/src/pages/_app" }), auth()],
+    integrations: [db(), vue({ appEntrypoint: "/src/pages/_app" })],
     adapter: node({
         mode: "standalone",
     }),
