@@ -1,0 +1,56 @@
+---
+import Navigation from "@components/Navigation.astro";
+
+interface Props {
+    title: string;
+}
+
+const { title } = Astro.props;
+
+const siteNavLinks = [
+    {
+        url: "/",
+        text: "Branch Duck",
+    },
+];
+
+if (Astro.locals.session === null) {
+    siteNavLinks.push({ url: "/sign-in", text: "Sign In" });
+} else {
+    siteNavLinks.push({ url: "/dashboard", text: "Dashboard" });
+}
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title} - Branch Duck</title>
+    </head>
+    <body>
+        <Navigation links={siteNavLinks} />
+        {
+            Astro.locals.session !== null && (
+                <form id="form-sign-out">
+                    <button>Sign Out</button>
+                </form>
+            )
+        }
+        <slot />
+    </body>
+</html>
+
+<script>
+    const signOutForm = document.getElementById(
+        "form-sign-out",
+    ) as HTMLFormElement;
+
+    signOutForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        await fetch("/api/sign-out", {
+            method: "POST",
+        });
+        window.location.href = "/sign-in";
+    });
+</script>
