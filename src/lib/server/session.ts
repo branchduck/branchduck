@@ -105,7 +105,7 @@ export async function validateSessionToken(
     };
 
     if (Date.now() >= session.expiresAt.getTime()) {
-        await invalidateSession(session.id);
+        await actions.invalidateSession(session.id);
         return { session: null, user: null };
     }
 
@@ -120,6 +120,3 @@ export async function validateSessionToken(
     return { session, user };
 }
 
-export async function invalidateSession(sessionId: string): Promise<void> {
-    await db.delete(Session).where(eq(Session.id, sessionId));
-}

@@ -1,5 +1,5 @@
 import { defineAction } from "astro:actions";
-import { db, Session, User } from "astro:db";
+import { db, eq, Session, User } from "astro:db";
 import { z } from "astro:schema";
 
 export const server = {
@@ -9,14 +9,14 @@ export const server = {
             email: z.string(),
             username: z.string(),
         }),
-        handler: async (input) => {
+        handler: async ({ githubId, email, username }) => {
             return (
                 await db
                     .insert(User)
                     .values({
-                        github_id: input.githubId,
-                        email: input.email,
-                        username: input.username,
+                        github_id: githubId,
+                        email: email,
+                        username: username,
                     })
                     .returning({ id: User.id })
             )[0];
@@ -28,12 +28,18 @@ export const server = {
             userId: z.number(),
             expiresAt: z.date(),
         }),
-        handler: async (input) => {
+        handler: async ({ id, userId, expiresAt }) => {
             await db.insert(Session).values({
-                id: input.id,
-                user_id: input.userId,
-                expires_at: Math.floor(input.expiresAt.getTime() / 1000),
+                id: id,
+                user_id: userId,
+                expires_at: Math.floor(expiresAt.getTime() / 1000),
             });
+        },
+    }),
+    invalidateSession: defineAction({
+        input: z.string(),
+        handler: async (input) => {
+            await db.delete(Session).where(eq(Session.id, input));
         },
     }),
 };
