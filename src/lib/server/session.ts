@@ -1,5 +1,6 @@
 import type { APIContext } from "astro";
 import { db, eq, Session, User } from "astro:db";
+import { actions } from "astro:actions";
 import { encodeBase32, encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 
@@ -32,10 +33,10 @@ export async function createSession(
         userId: userId,
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     };
-    await db.insert(Session).values({
+    await actions.createSession({
         id: session.id,
-        user_id: session.userId,
-        expires_at: Math.floor(session.expiresAt.getTime() / 1000),
+        userId: session.userId,
+        expiresAt: session.expiresAt,
     });
     return session;
 }
