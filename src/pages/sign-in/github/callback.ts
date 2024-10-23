@@ -1,6 +1,7 @@
-import { db, eq, User } from "astro:db";
-import type { OAuth2Tokens } from "arctic";
 import type { APIContext } from "astro";
+import { db, eq, User } from "astro:db";
+import { actions } from "astro:actions";
+import type { OAuth2Tokens } from "arctic";
 import { github } from "@lib/server/oauth";
 import {
     createSession,
@@ -86,18 +87,19 @@ export async function GET(context: APIContext): Promise<Response> {
         });
     }
 
-    const user = (
-        await db
-            .insert(User)
-            .values({
-                github_id: userResult.id,
-                email,
-                username: userResult.login,
-            })
-            .returning({ id: User.id })
-    )[0];
-    const sessionToken = generateSessionToken();
-    const session = await createSession(sessionToken, user.id);
-    setSessionTokenCookie(context, sessionToken, session.expiresAt);
-    return context.redirect("/sign-in");
+    const { data: user, error } = await actions.createUser({
+        githubId: userResult.id,
+        email,
+        username: userResult.login,
+    });
+    if (!error) {
+        const sessionToken = generateSessionToken();
+        const session = await createSession(sessionToken, user.id);
+        setSessionTokenCookie(context, sessionToken, session.expiresAt);
+        return context.redirect("/sign-in");
+    }
+
+    return new Response("Please verify your GitHub email address.", {
+        status: 400,
+    });
 }
