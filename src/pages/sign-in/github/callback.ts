@@ -35,61 +35,86 @@ export async function GET(context: APIContext): Promise<Response> {
         });
     }
 
+    const { existingUser, userResult } = await getGithubUser(
+        tokens.accessToken(),
+    );
+    if (existingUser) {
+        const { sessionToken, session } = await newSession(existingUser.id);
+        setSessionTokenCookie(context, sessionToken, session.expiresAt);
+        return context.redirect("/dashboard");
+    }
+
+    const { email, error } = await checkIfEmailVerified(tokens.accessToken());
+    if (error) {
+        return error;
+    }
+
+    const { data: user } = await actions.createUser({
+        githubId: userResult.id,
+        email,
+        username: userResult.login,
+    });
+    if (user) {
+        const { sessionToken, session } = await newSession(user.id);
+        setSessionTokenCookie(context, sessionToken, session.expiresAt);
+        return context.redirect("/dashboard");
+    }
+
+    return new Response("Please restart the process.", {
+        status: 400,
+    });
+}
+
+async function newSession(userId: number) {
+    const sessionToken = generateSessionToken();
+    const session = await createSession(sessionToken, userId);
+    return { sessionToken, session };
+}
+
+async function getGithubUser(accessToken: string) {
     const userResponse = await fetch("https://api.github.com/user", {
         headers: {
-            Authorization: `Bearer ${tokens.accessToken()}`,
+            Authorization: `Bearer ${accessToken}`,
         },
     });
     const userResult = await userResponse.json();
     const { data: existingUser } = await actions.getUserByGithubId(
         userResult.id,
     );
-    if (existingUser) {
-        const sessionToken = generateSessionToken();
-        const session = await createSession(sessionToken, existingUser.id);
-        setSessionTokenCookie(context, sessionToken, session.expiresAt);
-        return context.redirect("/sign-in");
-    }
 
+    return { existingUser, userResult };
+}
+
+async function checkIfEmailVerified(accessToken: string) {
     const emailListResponse = await fetch(
         "https://api.github.com/user/emails",
         {
             headers: {
-                Authorization: `Bearer ${tokens.accessToken()}`,
+                Authorization: `Bearer ${accessToken}`,
             },
         },
     );
-    const emailListResult: unknown = await emailListResponse.json();
+    const emailListResult = await emailListResponse.json();
+    let error: Response | undefined;
+
     if (!Array.isArray(emailListResult) || emailListResult.length < 1) {
-        return new Response("Please restart the process.", {
+        error = new Response("Please restart the process.", {
             status: 400,
         });
     }
-    let email: string | null = null;
+
+    let email;
     for (const emailRecord of emailListResult) {
         if (emailRecord.primary && emailRecord.verified) {
             email = emailRecord.email;
         }
     }
-    if (email === null) {
-        return new Response("Please verify your GitHub email address.", {
+
+    if (!email) {
+        error = new Response("Please verify your GitHub email address.", {
             status: 400,
         });
     }
 
-    const { data: user, error } = await actions.createUser({
-        githubId: userResult.id,
-        email,
-        username: userResult.login,
-    });
-    if (!error) {
-        const sessionToken = generateSessionToken();
-        const session = await createSession(sessionToken, user.id);
-        setSessionTokenCookie(context, sessionToken, session.expiresAt);
-        return context.redirect("/sign-in");
-    }
-
-    return new Response("Please verify your GitHub email address.", {
-        status: 400,
-    });
+    return { email, error };
 }
