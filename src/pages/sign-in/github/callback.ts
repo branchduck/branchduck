@@ -42,18 +42,9 @@ export async function GET(context: APIContext): Promise<Response> {
         },
     });
     const userResult = await userResponse.json();
-
-    const existingUser = (
-        await db
-            .select({
-                id: User.id,
-                github_id: User.github_id,
-                email: User.email,
-                username: User.username,
-            })
-            .from(User)
-            .where(eq(User.github_id, userResult.id))
-    )[0];
+    const { data: existingUser } = await actions.getUserByGithubId(
+        userResult.id,
+    );
     if (existingUser) {
         const sessionToken = generateSessionToken();
         const session = await createSession(sessionToken, existingUser.id);

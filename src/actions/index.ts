@@ -22,6 +22,22 @@ export const server = {
             )[0];
         },
     }),
+    getUserByGithubId: defineAction({
+        input: z.number(),
+        handler: async (input) => {
+            return (
+                await db
+                    .select({
+                        id: User.id,
+                        github_id: User.github_id,
+                        email: User.email,
+                        username: User.username,
+                    })
+                    .from(User)
+                    .where(eq(User.github_id, input))
+            )[0];
+        },
+    }),
     createSession: defineAction({
         input: z.object({
             sessionId: z.string(),
