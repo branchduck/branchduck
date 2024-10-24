@@ -12,38 +12,13 @@ const siteNavLinks = [
         url: "/",
         text: "Branch Duck",
     },
-    {
-        url: "/dashboard",
-        text: "Dashboard",
-    },
 ];
 
-const dashboardNavLinks = [
-    {
-        url: "/dashboard/pages",
-        text: "Pages",
-    },
-    {
-        url: "/dashboard/flows",
-        text: "Flows",
-    },
-    {
-        url: "/dashboard/conditions",
-        text: "Conditions",
-    },
-    {
-        url: "/dashboard/headings",
-        text: "Headings",
-    },
-    {
-        url: "/dashboard/links",
-        text: "Links",
-    },
-    {
-        url: "/dashboard/buttons",
-        text: "Buttons",
-    },
-];
+if (Astro.locals.session === null) {
+    siteNavLinks.push({ url: "/sign-in", text: "Sign In" });
+} else {
+    siteNavLinks.push({ url: "/dashboard", text: "Dashboard" });
+}
 ---
 
 <html lang="en">
@@ -54,11 +29,14 @@ const dashboardNavLinks = [
         <title>{title} - Branch Duck</title>
     </head>
     <body>
-        <Navigation name="Site" links={siteNavLinks} />
-        <form id="form-sign-out">
-            <button>Sign Out</button>
-        </form>
-        <Navigation name="Dashboard" links={dashboardNavLinks} />
+        <Navigation links={siteNavLinks} />
+        {
+            Astro.locals.session !== null && (
+                <form id="form-sign-out">
+                    <button>Sign Out</button>
+                </form>
+            )
+        }
         <slot />
     </body>
 </html>
