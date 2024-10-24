@@ -4,6 +4,10 @@ import { actions } from "astro:actions";
 import { encodeBase32, encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 
+const TIME_DAY = 1000 * 60 * 60 * 24;
+const TIME_DAYS_15 = TIME_DAY * 15;
+const TIME_DAYS_30 = TIME_DAY * 30;
+
 type SessionValidationResult =
     | { session: Session; user: typeof User.$inferSelect }
     | { session: null; user: null };
@@ -31,7 +35,7 @@ export async function createSession(
     const session: Session = {
         id: sessionId,
         userId: userId,
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        expiresAt: new Date(Date.now() + TIME_DAYS_30),
     };
     await actions.createSession({
         sessionId: session.id,
@@ -95,8 +99,8 @@ export async function validateSessionToken(
         return { session: null, user: null };
     }
 
-    if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
-        session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+    if (Date.now() >= session.expiresAt.getTime() - TIME_DAYS_15) {
+        session.expiresAt = new Date(Date.now() + TIME_DAYS_30);
         await actions.updateSessionExpireDate({
             sessionId: session.id,
             expiresAt: session.expiresAt,
