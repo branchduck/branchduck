@@ -53,3 +53,8 @@ p {
 a {
     color: currentColor;
 }
+
+input,
+button {
+    font: inherit;
+}
