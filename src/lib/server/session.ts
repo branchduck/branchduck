@@ -1,5 +1,5 @@
 import type { APIContext } from "astro";
-import { db, eq, Session, User } from "astro:db";
+import { Session, User } from "astro:db";
 import { actions } from "astro:actions";
 import { encodeBase32, encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
@@ -72,21 +72,7 @@ export async function validateSessionToken(
         sha256(new TextEncoder().encode(token)),
     );
 
-    const row = (
-        await db
-            .select({
-                sessionId: Session.id,
-                userId: Session.user_id,
-                expiresAt: Session.expires_at,
-                githubId: User.github_id,
-                email: User.email,
-                username: User.username,
-            })
-            .from(Session)
-            .innerJoin(User, eq(Session.user_id, User.id))
-            .where(eq(Session.id, sessionId))
-    )[0];
-
+    const { data: row } = await actions.getSessionAndUserBySessionId(sessionId);
     if (!row) {
         return { session: null, user: null };
     }

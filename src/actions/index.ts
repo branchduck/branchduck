@@ -52,6 +52,26 @@ export const server = {
             });
         },
     }),
+    getSessionAndUserBySessionId: defineAction({
+        input: z.string(),
+        handler: async (input) => {
+            return (
+                await db
+                    .select({
+                        sessionId: Session.id,
+                        userId: Session.user_id,
+                        expiresAt: Session.expires_at,
+                        githubId: User.github_id,
+                        email: User.email,
+                        username: User.username,
+                    })
+                    .from(Session)
+                    .innerJoin(User, eq(Session.user_id, User.id))
+                    .where(eq(Session.id, input))
+            )[0];
+        },
+    }),
+
     invalidateSession: defineAction({
         input: z.string(),
         handler: async (input) => {
