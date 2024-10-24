@@ -39,6 +39,9 @@ importers:
         specifier: ^5.6.3
         version: 5.6.3
     devDependencies:
+      astro-capo:
+        specifier: ^0.0.1
+        version: 0.0.1(astro@5.0.0-beta.5(@types/node@22.7.6)(lightningcss@1.27.0)(rollup@4.24.0)(typescript@5.6.3))
       lightningcss:
         specifier: ^1.27.0
         version: 1.27.0
@@ -867,6 +870,11 @@ packages:
 
   array-iterate@2.0.1:
     resolution: {integrity: sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg==}
+
+  astro-capo@0.0.1:
+    resolution: {integrity: sha512-KyQD1mzgEQnbqrKpYdoIZMAYejkOcIJocdGuQBH9Yzr4KqGzIR8P2DDNbV/FQXaSyq900lCZwWJH45tBIQCG8w==}
+    peerDependencies:
+      astro: '>= 2.8'
 
   astro@5.0.0-beta.5:
     resolution: {integrity: sha512-ONR2ngPbmi0CX1aCjvjLqvkcqakqYhHXTtTQAooADOxopyXS/l0WajHGsED75K4c7LMR0blDzBC9PPcfn0Oo0w==}
@@ -2014,6 +2022,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  ultrahtml@1.5.3:
+    resolution: {integrity: sha512-GykOvZwgDWZlTQMtp5jrD4BVL+gNn2NVlVafjcFUJ7taY20tqYdwdoWBFy6GBJsNTZe1GkGPkSl5knQAjtgceg==}
+
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
@@ -3071,6 +3082,11 @@ snapshots:
   aria-query@5.3.2: {}
 
   array-iterate@2.0.1: {}
+
+  astro-capo@0.0.1(astro@5.0.0-beta.5(@types/node@22.7.6)(lightningcss@1.27.0)(rollup@4.24.0)(typescript@5.6.3)):
+    dependencies:
+      astro: 5.0.0-beta.5(@types/node@22.7.6)(lightningcss@1.27.0)(rollup@4.24.0)(typescript@5.6.3)
+      ultrahtml: 1.5.3
 
   astro@5.0.0-beta.5(@types/node@22.7.6)(lightningcss@1.27.0)(rollup@4.24.0)(typescript@5.6.3):
     dependencies:
@@ -4463,6 +4479,8 @@ snapshots:
       semver: 7.6.3
 
   typescript@5.6.3: {}
+
+  ultrahtml@1.5.3: {}
 
   undici-types@6.19.8: {}
 

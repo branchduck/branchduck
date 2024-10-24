@@ -1,5 +1,6 @@
 ---
 import "@styles/global.css";
+import { Head } from "astro-capo";
 import Navigation from "@components/Navigation.astro";
 
 interface Props {
@@ -23,7 +24,7 @@ if (Astro.locals.session === null) {
 ---
 
 <html lang="en">
-    <head>
+    <Head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
@@ -42,7 +43,7 @@ if (Astro.locals.session === null) {
             type="font/woff2"
             crossorigin="anonymous"
         />
-    </head>
+    </Head>
     <body>
         <Navigation links={siteNavLinks} />
         {

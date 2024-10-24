@@ -1,5 +1,6 @@
 ---
 import "@styles/global.css";
+import { Head } from "astro-capo";
 import Navigation from "@components/Navigation.astro";
 
 interface Props {
@@ -48,7 +49,7 @@ const dashboardNavLinks = [
 ---
 
 <html lang="en">
-    <head>
+    <Head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
@@ -67,7 +68,7 @@ const dashboardNavLinks = [
             type="font/woff2"
             crossorigin="anonymous"
         />
-    </head>
+    </Head>
     <body>
         <Navigation name="Site" links={siteNavLinks} />
         <form id="form-sign-out">
