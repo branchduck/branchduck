@@ -1,5 +1,4 @@
 import type { APIContext } from "astro";
-import { db, eq, User } from "astro:db";
 import { actions } from "astro:actions";
 import type { OAuth2Tokens } from "arctic";
 import { github } from "@lib/server/oauth";
