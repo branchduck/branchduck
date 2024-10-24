@@ -5,5 +5,34 @@
 }
 
 html {
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
     color-scheme: light dark;
+}
+
+body {
+    line-height: 1.5;
+}
+
+body,
+h1,
+h2,
+p,
+ul {
+    margin: 0;
+}
+
+h1,
+h2 {
+    text-wrap: balance;
+    line-height: 1.1;
+}
+
+p {
+    text-wrap: pretty;
+}
+
+a {
+    color: currentColor;
 }
