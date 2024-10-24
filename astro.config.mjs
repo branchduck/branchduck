@@ -10,6 +10,14 @@ export default defineConfig({
         mode: "standalone",
     }),
     output: "server",
+    vite: {
+        css: {
+            transformer: "lightningcss",
+        },
+        build: {
+            cssMinify: "lightningcss",
+        },
+    },
     env: {
         schema: {
             GITHUB_CLIENT_ID: envField.string({
