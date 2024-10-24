@@ -24,13 +24,13 @@ export const server = {
     }),
     createSession: defineAction({
         input: z.object({
-            id: z.string(),
+            sessionId: z.string(),
             userId: z.number(),
             expiresAt: z.date(),
         }),
-        handler: async ({ id, userId, expiresAt }) => {
+        handler: async ({ sessionId, userId, expiresAt }) => {
             await db.insert(Session).values({
-                id: id,
+                id: sessionId,
                 user_id: userId,
                 expires_at: Math.floor(expiresAt.getTime() / 1000),
             });
@@ -40,6 +40,18 @@ export const server = {
         input: z.string(),
         handler: async (input) => {
             await db.delete(Session).where(eq(Session.id, input));
+        },
+    }),
+    updateSessionExpireDate: defineAction({
+        input: z.object({
+            sessionId: z.string(),
+            expiresAt: z.date(),
+        }),
+        handler: async ({ sessionId, expiresAt }) => {
+            await db
+                .update(Session)
+                .set({ expires_at: Math.floor(expiresAt.getTime() / 1000) })
+                .where(eq(Session.id, sessionId));
         },
     }),
 };

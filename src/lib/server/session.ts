@@ -34,7 +34,7 @@ export async function createSession(
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     };
     await actions.createSession({
-        id: session.id,
+        sessionId: session.id,
         userId: session.userId,
         expiresAt: session.expiresAt,
     });
@@ -111,12 +111,11 @@ export async function validateSessionToken(
 
     if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
         session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
-        await db
-            .update(Session)
-            .set({ expires_at: Math.floor(session.expiresAt.getTime() / 1000) })
-            .where(eq(Session.id, session.id));
+        await actions.updateSessionExpireDate({
+            sessionId: session.id,
+            expiresAt: session.expiresAt,
+        });
     }
 
     return { session, user };
 }
-
