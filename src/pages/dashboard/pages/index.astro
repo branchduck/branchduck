@@ -1,8 +1,8 @@
 ---
 import { db, Page } from "astro:db";
 import DashboardLayout from "@layouts/DashboardLayout.astro";
-import AddPageForm from "@pages/dashboard/pages/_components/AddPageForm.vue";
-import PageTable from "@pages/dashboard/pages/_components/PageTable.vue";
+import AddPageForm from "@pages/dashboard/pages/_components/AddPageForm.svelte";
+import PageTable from "@pages/dashboard/pages/_components/PageTable.svelte";
 
 const pages = await db.select().from(Page);
 ---

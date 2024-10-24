@@ -2,10 +2,10 @@
 import { defineConfig, envField } from "astro/config";
 import db from "@astrojs/db";
 import node from "@astrojs/node";
-import vue from "@astrojs/vue";
+import svelte from "@astrojs/svelte";
 
 export default defineConfig({
-    integrations: [db(), vue({ appEntrypoint: "/src/pages/_app" })],
+    integrations: [db(), svelte()],
     adapter: node({
         mode: "standalone",
     }),
