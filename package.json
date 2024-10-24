@@ -11,9 +11,9 @@
     },
     "dependencies": {
         "@astrojs/check": "^0.9.4",
-        "@astrojs/db": "^0.14.2",
-        "@astrojs/node": "^8.3.4",
-        "@astrojs/vue": "^4.5.2",
+        "@astrojs/db": "0.14.0-beta.2",
+        "@astrojs/node": "9.0.0-beta.2",
+        "@astrojs/vue": "5.0.0-beta.0",
         "@oslojs/crypto": "^1.0.1",
         "@oslojs/encoding": "^1.1.0",
         "arctic": "^2.0.1",
