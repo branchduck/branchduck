@@ -41,9 +41,23 @@ ul {
 }
 
 h1,
+h2,
+label,
+input,
+button {
+    line-height: 1.1;
+}
+
+h1,
 h2 {
     text-wrap: balance;
-    line-height: 1.1;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+input,
+button {
+    font: inherit;
 }
 
 p {
@@ -52,9 +66,4 @@ p {
 
 a {
     color: currentColor;
-}
-
-input,
-button {
-    font: inherit;
 }
