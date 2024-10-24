@@ -7,7 +7,7 @@
         "build": "astro check && astro build --remote",
         "preview": "astro preview",
         "astro": "astro",
-        "format": "prettier . --write"
+        "format": "prettier . --write --log-level silent"
     },
     "dependencies": {
         "@astrojs/check": "^0.9.4",
