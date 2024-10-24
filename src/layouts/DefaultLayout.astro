@@ -1,5 +1,6 @@
 ---
 import Navigation from "@components/Navigation.astro";
+import "@styles/global.css";
 
 interface Props {
     title: string;
@@ -46,7 +47,7 @@ if (Astro.locals.session === null) {
         "form-sign-out",
     ) as HTMLFormElement;
 
-    signOutForm.addEventListener("submit", async (event) => {
+    signOutForm?.addEventListener("submit", async (event) => {
         event.preventDefault();
         await fetch("/api/sign-out", {
             method: "POST",
