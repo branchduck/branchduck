@@ -3,9 +3,18 @@ import { defineConfig, envField } from "astro/config";
 import db from "@astrojs/db";
 import node from "@astrojs/node";
 import svelte from "@astrojs/svelte";
+import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-    integrations: [db(), svelte()],
+    site: "https://branchduck.studio",
+    integrations: [
+        db(),
+        svelte(),
+        sitemap({
+            filter: (page) =>
+                !page.startsWith("https://branchduck.studio/dashboard"),
+        }),
+    ],
     adapter: node({
         mode: "standalone",
     }),

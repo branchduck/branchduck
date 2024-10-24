@@ -7,12 +7,13 @@
         "build": "astro check && astro build --remote",
         "preview": "astro preview",
         "astro": "astro",
-        "format": "prettier . --write --log-level silent"
+        "format": "prettier . --write"
     },
     "dependencies": {
         "@astrojs/check": "^0.9.4",
         "@astrojs/db": "0.14.0-beta.2",
         "@astrojs/node": "9.0.0-beta.2",
+        "@astrojs/sitemap": "^3.2.1",
         "@astrojs/svelte": "6.0.0-beta.1",
         "@oslojs/crypto": "^1.0.1",
         "@oslojs/encoding": "^1.1.0",
