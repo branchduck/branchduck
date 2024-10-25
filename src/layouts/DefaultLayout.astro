@@ -1,4 +1,6 @@
 ---
+import "@styles/global.css";
+import { Head } from "astro-capo";
 import Navigation from "@components/Navigation.astro";
 
 interface Props {
@@ -22,12 +24,27 @@ if (Astro.locals.session === null) {
 ---
 
 <html lang="en">
-    <head>
+    <Head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
         <title>{title} - Branch Duck</title>
-    </head>
+        <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+        <link
+            rel="preload"
+            href="/fonts/Atkinson-Hyperlegible-Regular-102a.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="preload"
+            href="/fonts/Atkinson-Hyperlegible-Bold-102a.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin="anonymous"
+        />
+    </Head>
     <body>
         <Navigation links={siteNavLinks} />
         {
@@ -46,7 +63,7 @@ if (Astro.locals.session === null) {
         "form-sign-out",
     ) as HTMLFormElement;
 
-    signOutForm.addEventListener("submit", async (event) => {
+    signOutForm?.addEventListener("submit", async (event) => {
         event.preventDefault();
         await fetch("/api/sign-out", {
             method: "POST",

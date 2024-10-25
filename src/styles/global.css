@@ -1,0 +1,69 @@
+@font-face {
+    font-family: "Atkinson-Hyperlegible";
+    font-style: normal;
+    font-weight: 400;
+    src: url(/fonts/Atkinson-Hyperlegible-Regular-102a.woff2) format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Atkinson-Hyperlegible";
+    font-style: normal;
+    font-weight: 700;
+    src: url(/fonts/Atkinson-Hyperlegible-Bold-102a.woff2) format("woff2");
+    font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    color-scheme: light dark;
+}
+
+body {
+    font-family: "Atkinson-Hyperlegible", system-ui, sans-serif;
+    line-height: 1.5;
+}
+
+body,
+h1,
+h2,
+p,
+ul {
+    margin: 0;
+}
+
+h1,
+h2,
+label,
+input,
+button {
+    line-height: 1.1;
+}
+
+h1,
+h2 {
+    text-wrap: balance;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+input,
+button {
+    font: inherit;
+}
+
+p {
+    text-wrap: pretty;
+}
+
+a {
+    color: currentColor;
+}

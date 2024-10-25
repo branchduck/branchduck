@@ -1,32 +1,42 @@
 import { defineMiddleware, sequence } from "astro:middleware";
 import {
+    UPSTASH_REDIS_REST_TOKEN,
+    UPSTASH_REDIS_REST_URL,
+} from "astro:env/server";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+import {
     deleteSessionTokenCookie,
     setSessionTokenCookie,
     validateSessionToken,
 } from "@lib/server/session";
-import { TokenBucket } from "@lib/server/rate-limit";
 
-const bucket = new TokenBucket(100, 1);
+const ratelimit = new Ratelimit({
+    redis: new Redis({
+        url: UPSTASH_REDIS_REST_URL,
+        token: UPSTASH_REDIS_REST_TOKEN,
+    }),
+    limiter: Ratelimit.slidingWindow(10, "10 s"),
+    analytics: true,
+});
 
-const rateLimitMiddleware = defineMiddleware((context, next) => {
-    const clientIP = context.request.headers.get("X-Forwarded-For");
-    if (clientIP === null) {
+const rateLimitMiddleware = defineMiddleware(async (context, next) => {
+    const clientAddress = context.request.headers.get("x-forwarded-for");
+    console.log("[rateLimitMiddleware]", { clientAddress });
+
+    if (!clientAddress) {
         return next();
     }
 
-    let cost: number;
-    if (
-        context.request.method === "GET" ||
-        context.request.method === "OPTIONS"
-    ) {
-        cost = 1;
-    } else {
-        cost = 3;
-    }
+    const { success, limit, remaining } = await ratelimit.limit(clientAddress);
 
-    if (!bucket.consume(clientIP, cost)) {
+    if (!success) {
         return new Response("Too many requests", {
             status: 429,
+            headers: {
+                "X-RateLimit-Limit": limit.toString(),
+                "X-RateLimit-Remaining": remaining.toString(),
+            },
         });
     }
 
