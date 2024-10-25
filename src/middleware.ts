@@ -22,7 +22,6 @@ const ratelimit = new Ratelimit({
 
 const rateLimitMiddleware = defineMiddleware(async (context, next) => {
     const clientAddress = context.request.headers.get("x-forwarded-for");
-    console.log("[rateLimitMiddleware]", { clientAddress });
 
     if (!clientAddress) {
         return next();
