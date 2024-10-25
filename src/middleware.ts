@@ -15,7 +15,7 @@ const ratelimit = new Ratelimit({
     redis: new Redis({
         url: UPSTASH_REDIS_REST_URL,
         token: UPSTASH_REDIS_REST_TOKEN,
-    }),
+    }) as any,
     limiter: Ratelimit.slidingWindow(10, "10 s"),
     analytics: true,
 });
