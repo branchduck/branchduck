@@ -37,6 +37,14 @@ export default defineConfig({
                 context: "server",
                 access: "secret",
             }),
+            UPSTASH_REDIS_REST_URL: envField.string({
+                context: "server",
+                access: "secret",
+            }),
+            UPSTASH_REDIS_REST_TOKEN: envField.string({
+                context: "server",
+                access: "secret",
+            }),
         },
     },
 });
