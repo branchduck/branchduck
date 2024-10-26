@@ -1,0 +1,50 @@
+---
+import Link from "@layouts/components/Link.astro";
+
+const links = [];
+
+if (Astro.locals.session === null) {
+    links.push({ url: "/sign-in", text: "Sign In" });
+} else {
+    links.push({ url: "/dashboard", text: "Dashboard" });
+}
+---
+
+<Fragment>
+    {
+        links.map((link, i) => (
+            <li data-first={i === 0}>
+                <Link url={link.url}>{link.text}</Link>
+            </li>
+        ))
+    }
+    {
+        Astro.locals.session !== null && (
+            <li>
+                <form id="form-sign-out">
+                    <button class="link">Sign Out</button>
+                </form>
+            </li>
+        )
+    }
+</Fragment>
+
+<style>
+    li[data-first] {
+        margin-inline-start: auto;
+    }
+</style>
+
+<script>
+    const signOutForm = document.getElementById(
+        "form-sign-out",
+    ) as HTMLFormElement;
+
+    signOutForm?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        await fetch("/api/sign-out", {
+            method: "POST",
+        });
+        window.location.href = "/sign-in";
+    });
+</script>

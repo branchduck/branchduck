@@ -17,3 +17,9 @@ function getAriaCurrent(pathname: string): "page" | undefined {
 ---
 
 <a href={url} aria-current={getAriaCurrent(url)}><slot /></a>
+
+<style>
+    a {
+        text-decoration: none;
+    }
+</style>

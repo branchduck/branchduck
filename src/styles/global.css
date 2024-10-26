@@ -64,6 +64,27 @@ p {
     text-wrap: pretty;
 }
 
-a {
+a,
+button.link {
     color: currentColor;
+}
+
+button {
+    cursor: pointer;
+}
+
+button.link {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+ul[role="list"] {
+    list-style-type: none;
+    padding: 0;
+}
+
+.wrapper {
+    inline-size: min(70rem, 100% - 2rem);
+    margin-inline: auto;
 }

@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@layouts/DefaultLayout.astro";
+import SiteHeader from "@layouts/components/SiteHeader.astro";
 
 if (Astro.locals.session !== null) {
     return Astro.redirect("/dashboard");
@@ -7,6 +8,9 @@ if (Astro.locals.session !== null) {
 ---
 
 <DefaultLayout title="Sign In">
-    <h1>Sign In</h1>
-    <a href="/sign-in/github">Sign In with GitHub</a>
+    <SiteHeader />
+    <main class="wrapper">
+        <h1>Sign In</h1>
+        <a href="/sign-in/github">Sign In with GitHub</a>
+    </main>
 </DefaultLayout>

@@ -1,0 +1,52 @@
+---
+import Link from "@layouts/components/Link.astro";
+import RightLinks from "@layouts/components/RightLinks.astro";
+
+interface Props {
+    shouldUseName?: boolean;
+    shouldServerDefer?: boolean;
+}
+
+const { shouldUseName = false, shouldServerDefer = false } = Astro.props;
+
+const leftLinks = [
+    {
+        url: "/",
+        text: "Branch Duck",
+    },
+];
+---
+
+<header>
+    <nav aria-label={shouldUseName ? "site" : undefined} class="wrapper">
+        <ul role="list">
+            {
+                leftLinks.map((link) => (
+                    <li>
+                        <Link url={link.url}>{link.text}</Link>
+                    </li>
+                ))
+            }
+            {shouldServerDefer ? <RightLinks server:defer /> : <RightLinks />}
+        </ul>
+    </nav>
+</header>
+
+<style>
+    header {
+        border-block-end: 1px solid;
+    }
+
+    ul {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    ul :global(a),
+    ul :global(button) {
+        display: inline-block;
+        padding-block: 0.5rem;
+    }
+</style>

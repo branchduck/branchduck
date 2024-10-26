@@ -28,14 +28,19 @@ const rateLimitMiddleware = defineMiddleware(async (context, next) => {
         return next();
     }
 
-    const clientAddress = context.request.headers.get("x-forwarded-for");
+    if (
+        !context.url.pathname.startsWith("/api") ||
+        !context.url.pathname.startsWith("/sign-in/github")
+    ) {
+        return next();
+    }
 
+    const clientAddress = context.request.headers.get("x-forwarded-for");
     if (!clientAddress) {
         return next();
     }
 
     const { success, limit, remaining } = await ratelimit.limit(clientAddress);
-
     if (!success) {
         return new Response("Too many requests", {
             status: 429,

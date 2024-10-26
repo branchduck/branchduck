@@ -1,7 +1,8 @@
 ---
 import "@styles/global.css";
 import { Head } from "astro-capo";
-import Navigation from "@components/Navigation.astro";
+import SiteHeader from "@layouts/components/SiteHeader.astro";
+import Link from "@layouts/components/Link.astro";
 
 interface Props {
     title: string;
@@ -9,18 +10,7 @@ interface Props {
 
 const { title } = Astro.props;
 
-const siteNavLinks = [
-    {
-        url: "/",
-        text: "Branch Duck",
-    },
-    {
-        url: "/dashboard",
-        text: "Dashboard",
-    },
-];
-
-const dashboardNavLinks = [
+const links = [
     {
         url: "/dashboard/pages",
         text: "Pages",
@@ -71,25 +61,32 @@ const dashboardNavLinks = [
         />
     </Head>
     <body>
-        <Navigation name="Site" links={siteNavLinks} />
-        <form id="form-sign-out">
-            <button>Sign Out</button>
-        </form>
-        <Navigation name="Dashboard" links={dashboardNavLinks} />
-        <slot />
+        <SiteHeader shouldUseName />
+        <div class="dashboard-layout">
+            <nav aria-label="dashboard">
+                <ul role="list">
+                    {
+                        links.map((link) => (
+                            <li>
+                                <Link url={link.url}>{link.text}</Link>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </nav>
+            <slot />
+        </div>
     </body>
 </html>
 
-<script>
-    const signOutForm = document.getElementById(
-        "form-sign-out",
-    ) as HTMLFormElement;
+<style>
+    .dashboard-layout {
+        display: grid;
+        grid-template-columns: auto 1fr;
+    }
 
-    signOutForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        await fetch("/api/sign-out", {
-            method: "POST",
-        });
-        window.location.href = "/sign-in";
-    });
-</script>
+    li :global(a) {
+        display: block;
+        padding: 0.5rem 1rem;
+    }
+</style>
