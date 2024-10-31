@@ -1,8 +1,13 @@
 ---
 import DefaultLayout from "@layouts/DefaultLayout.astro";
+import SiteHeader from "@layouts/components/SiteHeader.astro";
+
+export const prerender = true;
 ---
 
 <DefaultLayout title="Home">
-    <h1>Branch Duck - Quacking Soon</h1>
-    <p>All things web accessibility</p>
+    <SiteHeader shouldServerDefer />
+    <main class="wrapper">
+        <h1>Branch Duck - all things web accessibility</h1>
+    </main>
 </DefaultLayout>

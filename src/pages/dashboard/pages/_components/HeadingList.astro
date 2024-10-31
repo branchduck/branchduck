@@ -1,0 +1,14 @@
+---
+const { headings } = Astro.props;
+---
+
+<ol>
+    {
+        headings?.map((heading: any) => (
+            <li>
+                h{heading.level}: {heading.text}
+                <Astro.self headings={heading.children} />
+            </li>
+        ))
+    }
+</ol>
