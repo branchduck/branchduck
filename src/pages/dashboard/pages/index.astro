@@ -1,10 +1,84 @@
 ---
 import { db, Page } from "astro:db";
+import * as htmlparser2 from "htmlparser2";
+import { filter } from "domutils";
+import { isTag, type AnyNode, type Element } from "domhandler";
 import DashboardLayout from "@layouts/DashboardLayout.astro";
 import AddPageForm from "@pages/dashboard/pages/_components/AddPageForm.svelte";
 import PageTable from "@pages/dashboard/pages/_components/PageTable.svelte";
+import HeadingList from "@pages/dashboard/pages/_components/HeadingList.astro";
+import {
+    getHeadingStructure,
+    convertToTree,
+} from "@pages/dashboard/pages/_helpers/headings";
 
 const pages = await db.select().from(Page);
+
+type ErrorType = "headings";
+
+type Error = {
+    text: string;
+};
+
+type ErrorMap = {
+    [key in ErrorType]: Error[];
+};
+
+function getH1Errors(nodes: AnyNode | AnyNode[]): Error[] {
+    const errors: Error[] = [];
+    const h1Count = filter(
+        (element) => isTag(element) && element.name === "h1",
+        nodes,
+    ).length;
+
+    if (h1Count < 1) {
+        errors.push({ text: "Page must have atleast one <h1> element" });
+    }
+
+    if (h1Count > 1) {
+        errors.push({ text: "Page must have only one <h1> element" });
+    }
+
+    return errors;
+}
+
+function getHeadingOrderErrors(nodes: AnyNode | AnyNode[]): Error[] {
+    const headingNames = ["h1", "h2", "h3", "h4", "h5", "h6"];
+    const errors: Error[] = [];
+    const headings = filter(
+        (element) => isTag(element) && headingNames.includes(element.name),
+        nodes,
+    ) as Element[];
+
+    for (const heading of headings) {
+        const currentHeadingLevel = Number(heading.name[1]);
+        let nextHeadingLevel;
+
+        if (heading.next) {
+            nextHeadingLevel = Number((heading.next as Element).name[1]);
+        }
+
+        if (nextHeadingLevel && currentHeadingLevel > nextHeadingLevel) {
+            //errors.push({
+            //    text: `${heading.name} with content "${(heading.children[0] as unknown as Text).data}" is larger than ${(heading.next as Element).name} with content "${((heading.next as Element).children[0] as unknown as Text).data}"`,
+            //});
+        }
+    }
+
+    return errors;
+}
+
+const htmlString =
+    "<html><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3></html>";
+const dom = htmlparser2.parseDocument(htmlString);
+const errors: ErrorMap = {
+    headings: [
+        ...getH1Errors(dom.children),
+        ...getHeadingOrderErrors(dom.children),
+    ],
+};
+
+const headingTree = convertToTree(getHeadingStructure(dom.children));
 ---
 
 <DashboardLayout title="Pages - Dashboard">
@@ -12,5 +86,20 @@ const pages = await db.select().from(Page);
         <h1>Pages</h1>
         <AddPageForm client:load />
         <PageTable pages={pages} client:load />
+        {
+            errors.headings.length > 0 ? (
+                <ul>
+                    {errors.headings.map((error) => (
+                        <li>{error.text}</li>
+                    ))}
+                </ul>
+            ) : (
+                <p>
+                    Heading structure looks good! Make sure the content of the
+                    headings make sense.
+                </p>
+            )
+        }
+        <HeadingList headings={headingTree} />
     </main>
 </DashboardLayout>
